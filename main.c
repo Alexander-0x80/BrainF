@@ -39,6 +39,7 @@ void interpret(char *program)
                     printf("Error: Pointer Underflow!\n");
                     exit(1);
                 }
+
                 --data_ptr;
                 break;
             case OP_INC:
@@ -57,6 +58,9 @@ void interpret(char *program)
                  break;
             case P_BYTE:
                 putchar(*data_ptr);
+                break;
+            case R_BYTE:
+                *data_ptr = getchar();
                 break;
         }
 
