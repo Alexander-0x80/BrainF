@@ -14,7 +14,7 @@
 void interpret(char *program);
 
 char mem[MEM_SIZE];
-char *data_ptr = &mem[0];
+char *data_ptr;
 
 void interpret(char *program)
 {
@@ -70,7 +70,9 @@ void interpret(char *program)
 
 int main()
 {
+    data_ptr = &mem[0];
     interpret("++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.");
+
     return 0;
 }
 
