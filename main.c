@@ -14,15 +14,15 @@
 void interpret(char *program);
 
 char mem[MEM_SIZE];
-char *data_ptr = mem;
+char *data_ptr = &mem[0];
 
 void interpret(char *program)
 {
-    unsigned int pc = 0;
+    char *pc = program;
     
-    while (program[pc])
+    while (*pc)
     {
-        switch(program[pc])
+        switch(*pc)
         {
             case OP_RIGHT:
                 if (*data_ptr == MEM_SIZE) 
@@ -34,7 +34,7 @@ void interpret(char *program)
                 ++data_ptr;
                 break;
             case OP_LEFT:
-                if (!*data_ptr)
+                if (data_ptr == &mem[0])
                 {
                     printf("Error: Pointer Underflow!\n");
                     exit(1);
@@ -43,18 +43,18 @@ void interpret(char *program)
                 --data_ptr;
                 break;
             case OP_INC:
-                ++*data_ptr;
+                ++(*data_ptr);
                 break;
             case OP_DEC:
-                --*data_ptr;
+                --(*data_ptr);
                 break;
             case OP_F_MATCH:
                 if (!*data_ptr)
-                    while(program[++pc] != ']');
+                    while(*(++pc) != OP_B_MATCH);
                 break;
             case OP_B_MATCH:
                 if (*data_ptr)
-                    while(program[--pc] != '[');
+                    while(*(--pc) != OP_F_MATCH);
                  break;
             case P_BYTE:
                 putchar(*data_ptr);
@@ -70,7 +70,6 @@ void interpret(char *program)
 
 int main()
 {
-    data_ptr = &mem[0];
     interpret("++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.");
     return 0;
 }
