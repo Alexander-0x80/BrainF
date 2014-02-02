@@ -18,7 +18,6 @@
 #define INP ','
 
 void run(char *program);
-void interpret(char *program);
 
 char mem[MEM_SIZE];
 char *dp;
