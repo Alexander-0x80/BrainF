@@ -1,66 +1,90 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define MEM_SIZE 30000
-#define OP_RIGHT '>'
-#define OP_LEFT '<' 
-#define OP_INC '+'
-#define OP_DEC '-'
-#define OP_F_MATCH '['
-#define OP_B_MATCH ']'
-#define P_BYTE '.'
-#define R_BYTE ','
+#define PROG_HELLO ">++++++++[<+++++++++>-]<.>>+>+>++>[-]+<[>[->+<<++++>]<<]>.+++++++..+++.>>+++++++.<<<<+++++++++++++++.>>.+++.------.--------.>>+.>++++."
+#define PROG_FIB "+++++++++++>+>>>>++++++++++++++++++++++++++++++++++++++++++++>++++++++++++++++++++++++++++++++<<<<<<[>[>>>>>>+>+<<<<<<<-]>>>>>>>[<<<<<<<+\
+                >>>>>>>-]<[>++++++++++[-<-[>>+>+<<<-]>>>[<<<+>>>-]+<[>[-]<[-]]>[<<[>>>+<<<-]>>[-]]<<]>>>[>>+>+<<<-]>>>[<<<+>>>-]+<[>[-]<[-]]>[<<+>>[-]]<<\
+                <<<<<]>>>>>[++++++++++++++++++++++++++++++++++++++++++++++++.[-]]++++++++++<[->-<]>++++++++++++++++++++++++++++++++++++++++++++++++.[-]<<\
+                <<<<<<<<<<[>>>+>+<<<<-]>>>>[<<<<+>>>>-]<-[>>.>.<<<[-]]<<[>>+>+<<<-]>>>[<<<+>>>-]<<[<+>-]>[<+>-]<<<-]"
 
+#define MEM_SIZE 30000
+#define INC_DP '>'
+#define DEC_DP '<' 
+#define INC '+'
+#define DEC '-'
+#define JZ '['
+#define JNZ ']'
+#define OUT '.'
+#define INP ','
+
+void run(char *program);
 void interpret(char *program);
 
 char mem[MEM_SIZE];
-char *data_ptr;
+char *dp;
 
-void interpret(char *program)
+void run(char *program)
 {
+    unsigned int level;
     char *pc = program;
-    
+
     while (*pc)
     {
         switch(*pc)
         {
-            case OP_RIGHT:
-                if (*data_ptr == MEM_SIZE) 
+            case INC_DP:
+                if (*dp == MEM_SIZE) 
                 {
                     printf("Error: Pointer Overflow!\n");
                     exit(1);
                 }
 
-                ++data_ptr;
+                ++dp;
                 break;
-            case OP_LEFT:
-                if (data_ptr == &mem[0])
+            case DEC_DP:
+                if (dp == &mem[0])
                 {
                     printf("Error: Pointer Underflow!\n");
                     exit(1);
                 }
 
-                --data_ptr;
+                --dp;
                 break;
-            case OP_INC:
-                ++(*data_ptr);
+            case INC:
+                ++(*dp);
                 break;
-            case OP_DEC:
-                --(*data_ptr);
+            case DEC:
+                --(*dp);
                 break;
-            case OP_F_MATCH:
-                if (!*data_ptr)
-                    while(*(++pc) != OP_B_MATCH);
+            case JZ:
+                if (! *dp)
+                {
+                    level++;
+                    while(level)
+                    {
+                        pc++;
+                        if (*pc == JZ) level++;
+                        if (*pc == JNZ) level--;
+                    }
+                }
                 break;
-            case OP_B_MATCH:
-                if (*data_ptr)
-                    while(*(--pc) != OP_F_MATCH);
-                 break;
-            case P_BYTE:
-                putchar(*data_ptr);
+            case JNZ:
+                if (*dp)
+                {
+                   level++;
+                   while (level)
+                   {
+                        pc--;
+                        if (*pc == JZ) level--;
+                        if (*pc == JNZ) level++;
+                   }
+                } 
                 break;
-            case R_BYTE:
-                *data_ptr = getchar();
+            case OUT:
+                putchar(*dp);
+                break;
+            case INP:
+                *dp = getchar();
                 break;
         }
 
@@ -70,9 +94,8 @@ void interpret(char *program)
 
 int main()
 {
-    data_ptr = &mem[0];
-    interpret("++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.");
-
+    dp = &mem[0];
+    run(PROG_HELLO);
     return 0;
 }
 
