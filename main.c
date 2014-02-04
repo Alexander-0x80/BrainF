@@ -20,7 +20,7 @@
 void run(char *program);
 
 char mem[MEM_SIZE];
-char *dp;
+char *dp = mem;
 
 void run(char *program)
 {
@@ -93,7 +93,6 @@ void run(char *program)
 
 int main()
 {
-    dp = &mem[0];
     run(PROG_HELLO);
     return 0;
 }
