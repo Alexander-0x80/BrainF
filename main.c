@@ -32,7 +32,7 @@ void run(char *program)
         switch(*pc)
         {
             case INC_DP:
-                if (*dp == MEM_SIZE) 
+                if (dp == &mem[MEM_SIZE]) 
                 {
                     printf("Error: Pointer Overflow!\n");
                     exit(1);
@@ -96,4 +96,3 @@ int main()
     run(PROG_HELLO);
     return 0;
 }
-
